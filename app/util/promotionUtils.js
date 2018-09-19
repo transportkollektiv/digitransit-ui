@@ -50,13 +50,13 @@ export const getPromotionQuery = (currentTime, config, context, mode) => {
  * @param maxDuration The maximum duration
  * @param maxDistance The maximum distance
  */
-export const checkResults = (plan, maxDuration, maxDistance) =>
-{
+export const checkResults = (plan, maxDuration, maxDistance) => {
   if (maxDuration && maxDistance) {
-    return plan.duration <= maxDuration && plan.legs[0].distance <= maxDistance ? plan : null;
-  } 
-    return plan;
-  
+    return plan.duration <= maxDuration && plan.legs[0].distance <= maxDistance
+      ? plan
+      : null;
+  }
+  return plan;
 };
 
 /**
