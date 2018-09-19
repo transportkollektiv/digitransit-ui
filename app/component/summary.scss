@@ -3,6 +3,9 @@
   flex: 1 0 0;
   flex-direction: column;
 }
+.mobile .summary {
+  flex-direction: column;
+}
 
 .summary-no-route-found {
   padding: 1em;
@@ -336,6 +339,7 @@
       background-color: #eefcff;
       color: #222;
       .icon-container {
+        display: flex;
         .icon {
           color: #86b4be;
         }
@@ -361,6 +365,17 @@
       margin-right: 0.3em;
       .icon {
         font-size: 1.8em;
+      }
+      .plus-icon {
+        font-size: 0.7em;
+        margin-bottom: 0.5em;
+      }
+      .icon-icon_cyclist {
+        color: #65be15;
+        font-size: 24pt;
+      }
+      .second-icon {
+        font-size: 24pt;
       }
     }
     .icon-container-arrow {

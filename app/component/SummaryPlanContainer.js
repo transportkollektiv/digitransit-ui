@@ -405,7 +405,7 @@ class SummaryPlanContainer extends React.Component {
 
     const { from, to } = this.props.params;
 
-    const isPromotion = this.state.promotionSuggestions && (
+    const isTopPromotion = this.state.promotionSuggestions && (
       <div
         className="biking-walk-promotion-container"
         style={{
@@ -437,7 +437,7 @@ class SummaryPlanContainer extends React.Component {
           display: this.state.loadSummary ? 'flex' : 'none',
         }}
       >
-        {isPromotion}
+        {isTopPromotion}
         <ItinerarySummaryListContainer
           activeIndex={activeIndex}
           currentTime={currentTime}
@@ -459,6 +459,19 @@ class SummaryPlanContainer extends React.Component {
         >
           {this.props.children}
         </ItinerarySummaryListContainer>
+        {this.state.promotionSuggestions && (
+          <div className="biking-walk-promotion-container">
+            <PromotionSuggestions
+              promotionSuggestion={this.state.promotionSuggestions[0].plan}
+              textId="by-public-and-bicycle"
+              iconName="cyclist"
+              secondIconName={this.state.promotionSuggestions[0].mode.toLowerCase()}
+              onSelect={this.onSelectImmediately}
+              mode="BICYCLE"
+              hash={0}
+            />
+          </div>
+        )}
         <TimeNavigationButtons
           isEarlierDisabled={this.props.itineraries.length === 0}
           isLaterDisabled={this.props.itineraries.length === 0}

@@ -137,6 +137,7 @@ class ItinerarySummaryListContainer extends React.Component {
 
     let msg;
     let outside;
+    console.log(this.props.error);
     if (this.props.error) {
       msg = this.props.error;
     } else if (

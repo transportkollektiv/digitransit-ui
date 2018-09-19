@@ -48,9 +48,38 @@ export const getPromotionQuery = (currentTime, config, context, mode) => {
  * @param maxDistance The maximum distance
  */
 export const checkResults = (plan, maxDuration, maxDistance) =>
-  plan.duration <= maxDuration && plan.legs[0].distance <= maxDistance
-    ? plan
-    : null;
+{
+  if (maxDuration && maxDistance) {
+    return plan.duration <= maxDuration && plan.legs[0].distance <= maxDistance ? plan : null;
+  } 
+    return plan;
+  
+};
+
+/**
+ * Forms an object suitable to be sent to the PromotionSuggestions component
+ * @param plan The plan to be added
+ * @param mode The mode for the promotion suggestion
+ */
+export const createPromotionObject = (plan, mode) => {
+  const modeProperties = [
+    {
+      mode: 'BICYCLE',
+      iconName: 'biking',
+      textId: 'bicycle',
+    },
+    {
+      mode: 'WALK',
+      textId: 'by-walking',
+      iconName: 'walk',
+    },
+  ];
+
+  return {
+    ...modeProperties.filter(o => o.mode === mode.toUpperCase())[0],
+    plan,
+  };
+};
 
 /**
  * Call the query for the Biking&Walking suggestions for public transport
@@ -59,62 +88,78 @@ export const checkResults = (plan, maxDuration, maxDistance) =>
  * @param context The current context
  * @param modes The promoted modes to search for, takes an array of 2 items
  * @param setPromotionSuggestions the function to set the state
- * @param maxDurationBike The maximum duration allowed for a bike itinerary
- * @param maxDistanceBike The maximum distance allowed for a bike itinerary
- * @param maxDurationWalk The maximum duration allowed for a walking itinerary
- * @param maxDistanceWalk The maximum distance allowed for a walking itinerary
+ * @param maxDurationsAndDistances The maximum durations and distances allowed
  */
 
-export const getBikeWalkPromotions = (
+export const getPromotionPlans = (
   currentTime,
   config,
   context,
   modes,
   setPromotionSuggestions,
-  maxDurationBike,
-  maxDistanceBike,
-  maxDurationWalk,
-  maxDistanceWalk,
+  maxDurationsAndDistances,
 ) => {
-  const bikingQuery = getPromotionQuery(currentTime, config, context, modes[0]);
-  const walkingQuery = getPromotionQuery(
+  const promotionQuery = getPromotionQuery(
     currentTime,
     config,
     context,
-    modes[1],
+    modes[0],
   );
 
-  Relay.Store.primeCache({ bikingQuery }, bikeQueryStatus => {
+  const additionalQuery =
+    modes.length > 1
+      ? getPromotionQuery(currentTime, config, context, modes[1])
+      : undefined;
+
+  Relay.Store.primeCache({ promotionQuery }, bikeQueryStatus => {
     if (bikeQueryStatus.ready === true) {
-      const bikingPlan = Relay.Store.readQuery(bikingQuery)[0].plan
+      const firstPlan = Relay.Store.readQuery(promotionQuery)[0].plan
         .itineraries[0];
 
-      Relay.Store.primeCache({ walkingQuery }, walkingQueryStatus => {
-        if (walkingQueryStatus.ready === true) {
-          const walkingPlan = Relay.Store.readQuery(walkingQuery)[0].plan
-            .itineraries[0];
+      if (additionalQuery) {
+        Relay.Store.primeCache({ additionalQuery }, additionalQueryStatus => {
+          if (additionalQueryStatus.ready === true) {
+            const additionalPlan = Relay.Store.readQuery(additionalQuery)[0]
+              .plan.itineraries[0];
 
-          setPromotionSuggestions(
-            [
-              checkResults(bikingPlan, maxDurationBike, maxDistanceBike) && {
-                plan: bikingPlan,
-                textId: 'bicycle',
-                iconName: 'biking',
-                mode: 'BICYCLE',
-              },
-              checkResults(walkingPlan, maxDurationWalk, maxDistanceWalk) && {
-                plan: walkingPlan,
-                textId: 'by-walking',
-                iconName: 'walk',
-                mode: 'WALK',
-              },
-            ].filter(o => o),
-          );
-        }
-      });
+            setPromotionSuggestions(
+              [
+                checkResults(
+                  firstPlan,
+                  maxDurationsAndDistances[0].maxDuration,
+                  maxDurationsAndDistances[0].maxDistance,
+                ) && createPromotionObject(additionalPlan, modes[0]),
+                checkResults(
+                  additionalPlan,
+                  maxDurationsAndDistances[1].maxDuration,
+                  maxDurationsAndDistances[1].maxDistance,
+                ) && createPromotionObject(additionalPlan, modes[1]),
+              ].filter(o => o),
+            );
+          }
+        });
+      } else {
+        setPromotionSuggestions(
+          [
+            checkResults(
+              firstPlan,
+              maxDurationsAndDistances[0].maxDuration,
+              maxDurationsAndDistances[0].maxDistance,
+            ) && {
+              plan: firstPlan,
+              textId: 'bicycle',
+              iconName: 'biking',
+              mode: 'BICYCLE',
+            },
+          ].filter(o => o),
+        );
+      }
     }
   });
 };
+/**
+ * Get the suggestions for cyclists by partially implementing public transport
+ */
 
 /**
  * @param itineraries The current itineraries
@@ -139,31 +184,56 @@ export const checkPromotionQueries = (
       getStreetMode(context.location, context.config) === 'PUBLIC_TRANSPORT' &&
       Math.round(totalTransitDistance / 500) * 500 <= 5000
     ) {
-      getBikeWalkPromotions(
+      getPromotionPlans(
         currentTime,
         config,
         context,
         ['BICYCLE', 'WALK'],
         setPromotionSuggestions,
-        1800,
-        5000,
-        1800,
-        2000,
+        [
+          {
+            maxDuration: 1800,
+            maxDistance: 5000,
+          },
+          {
+            maxDuration: 1800,
+            maxDistance: 2000,
+          },
+        ],
       );
     } else if (getStreetMode(context.location, context.config) === 'CAR_PARK') {
-      getBikeWalkPromotions(
+      getPromotionPlans(
         currentTime,
         config,
         context,
         ['BICYCLE,RAIL,SUBWAY,FERRY', getDefaultOTPModes(config).toString()],
         setPromotionSuggestions,
-        900,
-        2500,
-        900,
-        1000,
+        [
+          {
+            maxDuration: 900,
+            maxDistance: 2500,
+          },
+          {
+            maxDuration: 900,
+            maxDistance: 1000,
+          },
+        ],
+      );
+    } else if (getStreetMode(context.location, context.config) === 'BICYCLE') {
+      getPromotionPlans(
+        currentTime,
+        config,
+        context,
+        ['BICYCLE,RAIL,SUBWAY'],
+        setPromotionSuggestions,
+        [
+          {
+            maxDuration: 900,
+            maxDistance: undefined,
+          },
+        ],
       );
     } else {
-      console.log('doesnt qualify for promotion');
       setPromotionSuggestions(false);
     }
   }

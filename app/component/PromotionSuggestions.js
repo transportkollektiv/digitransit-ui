@@ -14,7 +14,19 @@ const PromotionSuggestions = (props, context) => (
         onKeyPress={() => props.onSelect(props.hash, props.mode)}
       >
         <div className="icon-container">
-          <Icon img={`icon-icon_${props.iconName}`} />
+          <Icon
+            img={`icon-icon_${props.iconName}`}
+            className={`icon-icon_${props.iconName}`}
+          />
+          {props.secondIconName && (
+            <React.Fragment>
+              <Icon img="icon-icon_plus" className="plus-icon" />
+              <Icon
+                img={`icon-icon_${props.secondIconName}`}
+                className="second-icon"
+              />
+            </React.Fragment>
+          )}
         </div>
         <div className="suggestion-details">
           <span className={`by-${props.textId}`}>
@@ -44,6 +56,7 @@ PromotionSuggestions.propTypes = {
   promotionSuggestion: PropTypes.array,
   textId: PropTypes.string,
   iconName: PropTypes.string,
+  secondIconName: PropTypes.string,
   onSelect: PropTypes.func,
   mode: PropTypes.string,
   hash: PropTypes.number,
