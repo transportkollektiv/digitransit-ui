@@ -10,7 +10,10 @@ import {
 import { getStreetMode, getDefaultOTPModes } from '../util/modeUtils';
 
 export const defaultParams = (currentTime, config, context) => {
-  const params = preparePlanParams(config)(context.router.params, context);
+  const params = preparePlanParams(config)(
+    context.router.params,
+    context.router,
+  );
   const startingParams = {
     wheelchair: null,
     ...defaultRoutingSettings,

@@ -7,6 +7,10 @@
   flex-direction: column;
 }
 
+.summary {
+  flex-direction: column;
+}
+
 .summary-no-route-found {
   padding: 1em;
   .external-no-route .external-link-container {
