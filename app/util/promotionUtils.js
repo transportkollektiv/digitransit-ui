@@ -1,6 +1,6 @@
 import Relay from 'react-relay/classic';
 import moment from 'moment';
-
+import uniq from 'lodash/uniq';
 import {
   preparePlanParams,
   defaultRoutingSettings,
@@ -43,6 +43,13 @@ export const getPromotionQuery = (currentTime, config, context, mode) => {
 
   return Relay.createQuery(getQuery(), promotionParams);
 };
+/**
+ * Make a list of used modes in the plan
+ * @param plan The plan to check
+ */
+
+export const getPlanModes = plan =>
+  uniq(plan.legs.map(leg => leg.mode)).toString();
 
 /**
  * Check the terms for the suggestions
@@ -131,7 +138,7 @@ export const getPromotionPlans = (
                   firstPlan,
                   maxDurationsAndDistances[0].maxDuration,
                   maxDurationsAndDistances[0].maxDistance,
-                ) && createPromotionObject(additionalPlan, modes[0]),
+                ) && createPromotionObject(firstPlan, modes[0]),
                 checkResults(
                   additionalPlan,
                   maxDurationsAndDistances[1].maxDuration,
@@ -152,7 +159,7 @@ export const getPromotionPlans = (
               plan: firstPlan,
               textId: 'bicycle',
               iconName: 'biking',
-              mode: 'BICYCLE',
+              mode: getPlanModes(firstPlan),
             },
           ].filter(o => o),
         );
