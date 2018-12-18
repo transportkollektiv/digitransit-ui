@@ -5,8 +5,8 @@ module.exports = {
   sessionRequestTimeout: 120000,
   sessionsPerBrowser: 1,
   suitesPerSession: 50,
-  tolerance: 5,
-  antialiasingTolerance: 5,
+  tolerance: 10,
+  antialiasingTolerance: 10,
   retry: 10,
   system: {
     plugins: {
