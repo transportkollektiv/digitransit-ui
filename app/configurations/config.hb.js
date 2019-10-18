@@ -136,17 +136,31 @@ export default configMerger(walttiConfig, {
   aboutThisService: {
     de: [
       {
-        header: 'Über diesen Dienst',
+        header: 'Über Mobil in Herrenberg',
         paragraphs: [
-          'This service is provided by Hb for route planning in Hb region. The service covers public transport, walking, cycling, and some private car use. Service is built on Digitransit platform.',
+          'Mit Mobil in Herrenberg kannst du Routen in und um Herrenberg planen - mit dem ÖPNV, zu Fuß, mit dem Fahrrad oder (teilweise) auch mit dem Auto. Der Dienst basiert auf der Digitransit-Plattform aus Helsinki und wird als freie und offene Software weiterentwickelt.',
+          'Herrenberg ist eine von bundesweit fünf Städten, die als Modellkommunen für saubere Luft ausgewählt wurden. Mobil in Herrenberg ist nur ein Projekt von vielen, mit dem wir gemeinsam die <a href="https://www.herrenberg.de/stadtluft">Stadtluft verbessern</a>.',
+          '<a href="https://www.herrenberg.de/stadtluft"><img src="https://s3.mobil-in-herrenberg.de/hb-ui/stadtluft.png"/></a>',
         ],
       },
+      {
+        header: 'Datenquellen',
+        paragraphs: [
+          'Kartenmaterial, Straßen, Gebäude, Haltestellen usw. werden von <a href="https://www.openstreetmap.org/copyright">&copy; OpenStreetMap-Mitwirkenden</a> unter der Open-Database-Lizenz bereitgestellt. Darauf basierende Kartenkacheln werden von <a href="https://foundation.wikimedia.org/wiki/Maps_Terms_of_Use">Wikimedia Maps</a> bereitgestellt. Die Fahrplandatensätze stammen von der <a href="https://www.nvbw.de/aufgaben/digitale-mobilitaet/open-data/">NVBW GmbH</a> unter der <a href="https://www.govdata.de/dl-de/by-2-0">dl-de/by-2-0</a>, ÖPNV-Streckenverläufe auch von OpenStreetMap-Mitwirkenden.',
+        ],
+      },
+      {
+        header: '',
+        paragraphs: [],
+      }
     ],
     en: [
       {
-        header: 'About this service',
+        header: 'About Mobil in Herrenberg',
         paragraphs: [
-          'This service is provided by Hb for route planning in Hb region. The service covers public transport, walking, cycling, and some private car use. Service is built on Digitransit platform.',
+          'With Mobil in Herrenberg you can plan routes in and around Herrenberg - by public transport, on foot, by bicycle or (partly) by car. The service is based on the Digitransit platform from Helsinki and is continuously developed as free and open software.',
+          'Herrenberg is one of five cities nationwide that have been selected as model municipalities for clean air. Mobil in Herrenberg is just one of many projects with which we are working together to <a href="https://www.herrenberg.de/stadtluft">improve the urban air</a>.',
+          '<a href="https://www.herrenberg.de/stadtluft"><img src="https://s3.mobil-in-herrenberg.de/hb-ui/stadtluft.png"/></a>',
         ],
       },
     ],
