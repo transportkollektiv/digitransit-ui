@@ -12,10 +12,10 @@ const LOCATIONIQ_API_KEY = process.env.LOCATIONIQ_API_KEY;
 
 const walttiConfig = require('./waltti').default;
 
-const minLat = 48.55525;
-const maxLat = 48.64040;
-const minLon = 8.78597;
-const maxLon = 8.98613;
+const minLat = 47.9;
+const maxLat = 49.1;
+const minLon = 8.4;
+const maxLon = 9.9;
 
 export default configMerger(walttiConfig, {
   CONFIG,
