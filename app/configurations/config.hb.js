@@ -122,7 +122,7 @@ export default configMerger(walttiConfig, {
 
   footer: {
     content: [
-      { label: `ein digitransit des transportkollektivs` },
+      { label: `Digitransit der Stadt Herrenberg` },
       {},
       {
         name: 'about-this-service',
